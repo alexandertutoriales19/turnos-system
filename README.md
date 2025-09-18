@@ -13,7 +13,7 @@ Permite registrar personas, generar tickets de atención, asignarlos a módulos 
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/Alexander-FM/ShiftSystem.git
+git clone https://github.com/alexandertutoriales19/turnos-system.git
 cd sistema-turnos
 ```
 

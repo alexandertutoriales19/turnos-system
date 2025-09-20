@@ -3,12 +3,13 @@ package com.alexandertutoriales.turnosbackend.api;
 import java.util.List;
 
 import com.alexandertutoriales.turnosbackend.api.dto.BoardItemDTO;
-import com.alexandertutoriales.turnosbackend.api.dto.PersonResponseDTO;
+import com.alexandertutoriales.turnosbackend.api.dto.PersonRequestDTO;
 import com.alexandertutoriales.turnosbackend.api.dto.TicketResponseDTO;
 import com.alexandertutoriales.turnosbackend.person.Person;
 import com.alexandertutoriales.turnosbackend.person.PersonRepository;
 import com.alexandertutoriales.turnosbackend.ticket.TicketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -27,7 +29,7 @@ public class TicketController {
   private final PersonRepository personRepository;
 
   @PostMapping
-  public TicketResponseDTO create(@RequestBody final PersonResponseDTO dto) {
+  public TicketResponseDTO create(@RequestBody final PersonRequestDTO dto) {
     Person p = personRepository.findByDni(dto.dni()).orElseGet(() -> {
       Person person = new Person();
       person.setDni(dto.dni());
@@ -35,6 +37,9 @@ public class TicketController {
       person.setLastName(dto.lastName());
       return personRepository.save(person);
     });
+    if (!dto.dni().matches("\\d{8}")) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El DNI debe contener 8 dígitos como mínimo.");
+    }
     return ticketService.create(p);
   }
 

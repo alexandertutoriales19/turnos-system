@@ -84,7 +84,7 @@
         lastNameInput.value = "";
       }
     } catch (err) {
-      console.error("Error buscando persona:", err);
+      console.error("Error buscando persona:", err.message);
     }
   });
 
@@ -106,10 +106,12 @@
         body: JSON.stringify({dni, firstName, lastName})
       });
       if (!res.ok) {
-        throw new Error("Error al crear ticket");
+        const errBody = await res.json();
+        warning.textContent = errBody.message;
+        warning.classList.remove("d-none");
+        throw new Error(errBody.message || "Error al crear ticket");
       }
       const ticket = await res.json();
-
       // Abrir ventana de impresión
       const printWindow = window.open("", "_blank", "width=400,height=300");
       printWindow.document.write(`
@@ -132,7 +134,7 @@
         `);
       printWindow.document.close();
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Error:", err.message);
       alert("No se pudo generar el ticket.");
     }
   });

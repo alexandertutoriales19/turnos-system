@@ -1,13 +1,12 @@
 server:
-  port: 8080
-
+  port: ${PORT:8080}
 spring:
   application:
     name: turnosbackend
   datasource:
-    url: jdbc:mysql://localhost:3306/turnosbd?createDatabaseIfNotExist=true
-    username: root
-    password: root_password
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:turnosbd}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASS:root_password}
   jpa:
     hibernate:
       ddl-auto: update
